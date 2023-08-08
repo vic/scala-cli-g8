@@ -1,0 +1,8 @@
+before_install:
+  - curl -o scala-cli https://raw.githubusercontent.com/VirtusLab/scala-cli/main/scala-cli.sh
+  - chmod +x scala-cli
+install:
+  - |
+    ./scala-cli --power publish --publish-repository $HOME/.m2/repository --organization "$GROUP" --name "$ARTIFACT" --version "$VERSION" .
+    ls -R $HOME/.m2/repository/
+    find $HOME/.m2/repository -type f -name "*.pom" -exec cp -v {} $PWD \;
