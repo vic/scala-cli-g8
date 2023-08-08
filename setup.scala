@@ -4,7 +4,7 @@
 
 package scala_cli.runx
 
-object g8 {
-  val preArgs: Array[String] = Array("launch", "giter8", "--")
+object setup {
+  val preArgs: Array[String] = Array("launch", "giter8", "--", "https://github.com/vic/scala-cli-g8.git")
   def main(args: Array[String]): Unit = coursier.cli.Coursier.main(preArgs ++ args)
 }
