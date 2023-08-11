@@ -6,5 +6,6 @@ package scala_cli.runx
 
 object g8 {
   val preArgs: Array[String] = Array("launch", "giter8", "--")
-  def main(args: Array[String]): Unit = coursier.cli.Coursier.main(preArgs ++ args)
+  def main(args: Array[String]): Unit =
+    coursier.cli.Coursier.main(preArgs ++ args)
 }
