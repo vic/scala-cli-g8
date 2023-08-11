@@ -8,6 +8,17 @@ object testing extends utest.TestSuite:
     def apply(sh: os.Shellable*): os.CommandResult
   }
 
+  val NON_INTERACTIVE: Seq[os.Shellable] = Seq(
+      "--isApp=true",
+      "--isLibrary=true",
+      "--targetJavaPlatform=true",
+      "--targetJavaScriptPlatform=true",
+      "--targetNativePlatform=true",
+      "--githubActionsCheckFormat=true",
+      "--githubActionsRunTests=true",
+      "--githubActionsPublishJitPack=true",
+  )
+
   def gen_project(): (os.Path, Runner) =
     val dir = os.temp.dir()
     println(s"Generated new project at ${dir}")
@@ -19,11 +30,7 @@ object testing extends utest.TestSuite:
       "-o",
       dir,
       "--force",
-      "--isBinary=true",
-      "--isLibrary=true",
-      "--githubActionsCheckFormat=true",
-      "--githubActionsRunTests=true",
-      "--githubActionsPublishJitPack=true",
+      NON_INTERACTIVE,
       s"file://${os.pwd}"
     ).call(mergeErrIntoOut = true, cwd = dir)
 
@@ -51,3 +58,6 @@ object testing extends utest.TestSuite:
         val res = run_cli("test", dir)
         val out = res.out.trim()
         assert(out.contains("math works"))
+
+      test("package js"):
+        run_cli("--power", "package", "--js", dir, "-o", dir / "out.js", "--js-emit-source-maps", "--js-source-maps-path", dir / "out.js.map")
