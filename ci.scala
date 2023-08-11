@@ -9,14 +9,14 @@ object testing extends utest.TestSuite:
   }
 
   val NON_INTERACTIVE: Seq[os.Shellable] = Seq(
-      "--isApp=true",
-      "--isLibrary=true",
-      "--targetJavaPlatform=true",
-      "--targetJavaScriptPlatform=true",
-      "--targetNativePlatform=true",
-      "--githubActionsCheckFormat=true",
-      "--githubActionsRunTests=true",
-      "--githubActionsPublishJitPack=true",
+    "--isApp=true",
+    "--isLibrary=true",
+    "--targetJavaPlatform=true",
+    "--targetJavaScriptPlatform=true",
+    "--targetNativePlatform=true",
+    "--githubActionsCheckFormat=true",
+    "--githubActionsRunTests=true",
+    "--githubActionsPublishJitPack=true"
   )
 
   def gen_project(): (os.Path, Runner) =
@@ -60,4 +60,14 @@ object testing extends utest.TestSuite:
         assert(out.contains("math works"))
 
       test("package js"):
-        run_cli("--power", "package", "--js", dir, "-o", dir / "out.js", "--js-emit-source-maps", "--js-source-maps-path", dir / "out.js.map")
+        run_cli(
+          "--power",
+          "package",
+          "--js",
+          dir,
+          "-o",
+          dir / "out.js",
+          "--js-emit-source-maps",
+          "--js-source-maps-path",
+          dir / "out.js.map"
+        )
