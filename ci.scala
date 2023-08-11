@@ -39,6 +39,8 @@ object testing extends utest.TestSuite:
 
     (dir, run_cli)
 
+  val isWSL = os.proc("uname", "-a").call().out.trim().contains("WSL")
+
   val tests = Tests:
     test("generated project"):
       val (dir, run_cli) = gen_project()
@@ -59,15 +61,36 @@ object testing extends utest.TestSuite:
         val out = res.out.trim()
         assert(out.contains("math works"))
 
-      test("package js"):
-        run_cli(
-          "--power",
-          "package",
-          "--js",
-          dir,
-          "-o",
-          dir / "out.js",
-          "--js-emit-source-maps",
-          "--js-source-maps-path",
-          dir / "out.js.map"
-        )
+      test("package fatjar java executable"):
+        run_cli("--power", "package", "--assembly", dir, "-o", dir / "fatApp")
+        val out = os.proc(dir / "fatApp").call().out.trim()
+        assert(out.contains("Hello World"))
+
+      test("package native executable"):
+        if (isWSL) then "Skipped on WSL"
+        else
+          run_cli(
+            "--power",
+            "package",
+            "--native-image",
+            dir,
+            "-o",
+            dir / "nativeApp"
+          )
+          val out = os.proc(dir / "nativeApp").call().out.trim()
+          assert(out.contains("Hello World"))
+
+      test("package js executable"):
+        if (isWSL) then "Skipped on WSL"
+        else
+          run_cli(
+            "--power",
+            "package",
+            "--js",
+            dir,
+            "-o",
+            dir / "out.js",
+            "--js-emit-source-maps",
+            "--js-source-maps-path",
+            dir / "out.js.map"
+          )
